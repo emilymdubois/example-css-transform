@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: monospace;
+      }
+
+      .inputContainer {
+        display: flex;
+      }
+
+      .inputContainer label {
+        width: 48px;
+        display: flex;
+        justify-content: space-between;
+        margin-right: 12px;
+      }
+
+      #formContainer {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        padding: 12px;
+        background: #f0f0ff;
+        opacity: 0.8;
+        border-radius: 4px;
+        z-index: 1;
+      }
+
+      #buttonContainer {
+        margin: 12px -12px -12px;
+        padding: 12px;
+        border-top: 1px solid #ccccff;
+      }
+
+      #squareContainer {
+        height: 60vh;
+        width: 60vh;
+        position: absolute;
+        top: calc(50% - 30vh);
+        left: calc(50% - 30vh);
+      }
+
+      #square {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            217deg,
+            rgba(0, 255, 0, 0.8),
+            rgba(0, 255, 0, 0) 70.71%
+          ),
+          linear-gradient(
+            127deg,
+            rgba(255, 0, 0, 0.8),
+            rgba(255, 0, 0, 0) 70.71%
+          ),
+          linear-gradient(
+            336deg,
+            rgba(0, 0, 255, 0.8),
+            rgba(0, 0, 255, 0) 70.71%
+          );
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div id="formContainer">
+        <form id="form"></form>
+      </div>
+      <div id="squareContainer">
+        <div id="square"></div>
+      </div>
+    </div>
+
+    <script>
+      const DIMENSION_X = "X";
+      const DIMENSION_Y = "Y";
+      const DIMENSION_Z = "Z";
+      const DEFAULT_VALUE = 0;
+
+      [DIMENSION_X, DIMENSION_Y, DIMENSION_Z].forEach((d) => {
+        const label = document.createElement("label");
+        const labelDimension = document.createElement("div");
+        const labelValue = document.createElement("div");
+
+        labelDimension.innerHTML = `${d}:`;
+        labelValue.innerHTML = `${DEFAULT_VALUE}°`;
+        label.append(labelDimension, labelValue);
+
+        const input = document.createElement("input");
+        input.id = d;
+        input.type = "range";
+        input.min = -90;
+        input.max = 90;
+        input.step = 5;
+        input.defaultValue = DEFAULT_VALUE;
+        input.oninput = function () {
+          labelValue.innerHTML = `${this.value}°`;
+          const x = document.getElementById(DIMENSION_X).value;
+          const y = document.getElementById(DIMENSION_Y).value;
+          const z = document.getElementById(DIMENSION_Z).value;
+          const transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`;
+          document.getElementById("square").style.transform = transform;
+        };
+
+        const inputContainer = document.createElement("div");
+        inputContainer.className = "inputContainer";
+        inputContainer.append(label, input);
+
+        document.getElementById("form").append(inputContainer);
+      });
+
+      const button = document.createElement("button");
+      button.innerHTML = "Reset";
+      button.onclick = function () {
+        document.getElementById("form").reset();
+      };
+
+      const buttonContainer = document.createElement("div");
+      buttonContainer.id = "buttonContainer";
+      buttonContainer.append(button);
+
+      form.appendChild(buttonContainer);
+    </script>
+  </body>
+</html>
